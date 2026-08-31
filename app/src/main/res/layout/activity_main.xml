@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:text="Ждём SMS с кодом (до 5 минут)…" />
+
+    <EditText
+        android:id="@+id/codeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Код из SMS"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/retryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Слушать SMS заново" />
+
+</LinearLayout>
