@@ -8,26 +8,23 @@
 
     <TextView
         android:id="@+id/statusText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        android:text="Ждём SMS с кодом (до 5 минут)…" />
-
-    <EditText
-        android:id="@+id/codeEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Код из SMS"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textSize="24sp" />
+        android:textSize="16sp"
+        android:layout_marginBottom="24dp"
+        android:text="Выдайте разрешения ниже" />
 
     <Button
-        android:id="@+id/retryButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/grantSmsButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Слушать SMS заново" />
+        android:layout_marginBottom="12dp"
+        android:text="Разрешить чтение SMS" />
+
+    <Button
+        android:id="@+id/grantBatteryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Снять ограничения батареи" />
 
 </LinearLayout>

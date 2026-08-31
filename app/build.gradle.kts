@@ -39,5 +39,6 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    // Google Play Services больше не нужны — фоновый приём SMS работает
+    // через обычный BroadcastReceiver и системное разрешение RECEIVE_SMS.
 }
