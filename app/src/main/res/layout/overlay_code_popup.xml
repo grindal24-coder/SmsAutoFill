@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/overlay_background"
+    android:padding="16dp"
+    android:elevation="12dp"
+    android:layout_margin="12dp">
+
+    <TextView
+        android:id="@+id/overlayCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:text="Найден код: 12345" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/overlayDismissButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Отклонить"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/overlayInsertButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Вставить" />
+    </LinearLayout>
+</LinearLayout>

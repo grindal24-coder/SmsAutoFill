@@ -1,30 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/statusText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginBottom="24dp"
-        android:text="Выдайте разрешения ниже" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <Button
-        android:id="@+id/grantSmsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="Разрешить чтение SMS" />
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp"
+            android:text="Выдайте разрешения ниже" />
 
-    <Button
-        android:id="@+id/grantBatteryButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Снять ограничения батареи" />
+        <Button
+            android:id="@+id/grantSmsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="Разрешить чтение SMS" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/grantBatteryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="Снять ограничения батареи" />
+
+        <Button
+            android:id="@+id/grantOverlayButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Разрешить показ поверх приложений" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:textStyle="bold"
+            android:text="Дизайн попапа:" />
+
+        <RadioGroup
+            android:id="@+id/designGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/designActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Дизайн 1 — диалог (Activity)" />
+
+            <RadioButton
+                android:id="@+id/designOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Дизайн 2 — оверлей (поверх окон)" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/previewButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Показать пример выбранного дизайна" />
+
+    </LinearLayout>
+</ScrollView>

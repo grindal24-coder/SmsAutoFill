@@ -3,6 +3,7 @@ package com.example.smsautofill
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import android.provider.Telephony
 
 /**
@@ -11,7 +12,7 @@ import android.provider.Telephony
  * система сама поднимет процесс на время обработки broadcast.
  *
  * Google Play Services тут не участвуют, поэтому это работает и на
- * устройствах/прошивках без GMS (в отличие от SMS User Consent API).
+ * устройствах/прошивках без GMS.
  */
 class SmsReceiver : BroadcastReceiver() {
 
@@ -26,19 +27,25 @@ class SmsReceiver : BroadcastReceiver() {
 
         val code = codeRegex.find(fullBody)?.value ?: return
 
-        // КЛЮЧЕВОЙ МОМЕНТ: Activity запускается синхронно прямо внутри
-        // onReceive(). Это одно из официально задокументированных
-        // исключений из ограничений на запуск экрана из фона в Android
-        // ("Restrictions on starting activities from the background" —
-        // явно упоминается получение SMS_RECEIVED как валидный случай).
-        // Именно поэтому попап всплывает поверх ЛЮБОГО текущего приложения
-        // (в том числе Y), даже если наше приложение полностью закрыто.
-        val popupIntent = Intent(context, CodePopupActivity::class.java).apply {
-            putExtra(CodePopupActivity.EXTRA_CODE, code)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                    Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val design = PopupPrefs.getDesign(context)
+
+        if (design == PopupPrefs.DESIGN_OVERLAY && Settings.canDrawOverlays(context)) {
+            // Дизайн 2: настоящее оверлей-окно, не подпадает под
+            // ограничения на запуск Activity из фона.
+            OverlayPopupHelper.show(context, code)
+        } else {
+            // Дизайн 1 (или запасной вариант, если разрешение на оверлей
+            // не выдано): запуск синхронно внутри onReceive() — один из
+            // задокументированных случаев, когда Android разрешает старт
+            // Activity из фона, но некоторые устройства/версии Android
+            // всё равно могут это блокировать.
+            val popupIntent = Intent(context, CodePopupActivity::class.java).apply {
+                putExtra(CodePopupActivity.EXTRA_CODE, code)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+            context.startActivity(popupIntent)
         }
-        context.startActivity(popupIntent)
     }
 }

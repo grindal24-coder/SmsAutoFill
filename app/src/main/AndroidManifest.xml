@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -18,8 +19,9 @@
             </intent-filter>
         </activity>
 
-        <!-- Прозрачный "попап" с предложением вставить код. Запускается
-             из SmsReceiver даже когда приложение полностью закрыто. -->
+        <!-- Дизайн 1: попап как отдельный экран (Activity). Может
+             блокироваться ограничениями Android на запуск активностей
+             из фона, когда открыто другое приложение. -->
         <activity
             android:name=".CodePopupActivity"
             android:exported="false"
@@ -27,8 +29,6 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask" />
 
-        <!-- Манифест-ресивер: получает SMS даже когда процесс приложения
-             не запущен. Работает без Google Play Services. -->
         <receiver
             android:name=".SmsReceiver"
             android:exported="true"

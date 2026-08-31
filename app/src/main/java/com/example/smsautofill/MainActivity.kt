@@ -15,15 +15,15 @@ import androidx.core.content.ContextCompat
 import com.example.smsautofill.databinding.ActivityMainBinding
 
 /**
- * Экран нужен только чтобы один раз выдать разрешения. Дальше вся логика
- * (SmsReceiver + CodePopupActivity) работает сама в фоне — это приложение
- * можно закрыть, попап всё равно будет всплывать при приходе SMS с кодом.
+ * Экран нужен, чтобы один раз выдать разрешения и выбрать дизайн попапа.
+ * Дальше вся логика (SmsReceiver + попап) работает сама в фоне — это
+ * приложение можно закрыть, попап всё равно появится при приходе SMS.
  */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val permissionLauncher = registerForActivityResult(
+    private val smsPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         updateStatus()
@@ -42,11 +42,36 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.grantSmsButton.setOnClickListener {
-            permissionLauncher.launch(Manifest.permission.RECEIVE_SMS)
+            smsPermissionLauncher.launch(Manifest.permission.RECEIVE_SMS)
         }
 
         binding.grantBatteryButton.setOnClickListener {
             requestIgnoreBatteryOptimizations()
+        }
+
+        binding.grantOverlayButton.setOnClickListener {
+            if (!Settings.canDrawOverlays(this)) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName")
+                )
+                startActivity(intent)
+            }
+        }
+
+        val currentDesign = PopupPrefs.getDesign(this)
+        binding.designGroup.check(
+            if (currentDesign == PopupPrefs.DESIGN_OVERLAY) binding.designOverlay.id
+            else binding.designActivity.id
+        )
+        binding.designGroup.setOnCheckedChangeListener { _, checkedId ->
+            val newDesign = if (checkedId == binding.designOverlay.id)
+                PopupPrefs.DESIGN_OVERLAY else PopupPrefs.DESIGN_ACTIVITY
+            PopupPrefs.setDesign(this, newDesign)
+        }
+
+        binding.previewButton.setOnClickListener {
+            previewCurrentDesign()
         }
 
         updateStatus()
@@ -55,6 +80,26 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateStatus()
+    }
+
+    private fun previewCurrentDesign() {
+        val design = PopupPrefs.getDesign(this)
+        if (design == PopupPrefs.DESIGN_OVERLAY) {
+            if (Settings.canDrawOverlays(this)) {
+                OverlayPopupHelper.show(this, "12345")
+            } else {
+                Toast.makeText(
+                    this,
+                    "Сначала выдайте разрешение \"поверх приложений\"",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } else {
+            val intent = Intent(this, CodePopupActivity::class.java).apply {
+                putExtra(CodePopupActivity.EXTRA_CODE, "12345")
+            }
+            startActivity(intent)
+        }
     }
 
     private fun updateStatus() {
@@ -69,14 +114,14 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        val hasOverlayPermission = Settings.canDrawOverlays(this)
+
         binding.statusText.text = buildString {
             append(if (hasSmsPermission) "✅ Разрешение на SMS выдано" else "❌ Разрешение на SMS не выдано")
             append("\n")
             append(if (ignoringBattery) "✅ Ограничения батареи сняты" else "❌ Ограничения батареи ещё активны")
-            append("\n\n")
-            if (hasSmsPermission && ignoringBattery) {
-                append("Всё готово. Можно закрыть приложение — фоновое обнаружение кода продолжит работать.")
-            }
+            append("\n")
+            append(if (hasOverlayPermission) "✅ Разрешение \"поверх приложений\" выдано" else "❌ Разрешение \"поверх приложений\" не выдано")
         }
     }
 
